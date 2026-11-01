@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Operations · NWR BI Portal{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Operations — Occupancy by Resort (This Month)</h1>
+</div>
+
+<div class="card">
+  <table class="data-table">
+    <thead>
+      <tr><th>Resort</th><th>Total Rooms</th><th>Room-Nights Sold</th><th>Occupancy</th></tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td>{{ row.resort_name }}</td>
+        <td>{{ row.total_rooms }}</td>
+        <td>{{ row.nights_sold }}</td>
+        <td>{{ row.occupancy_pct }}%</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="muted">No occupancy data yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.env
+instance/
+uploads_incoming/*.csv
+uploads_incoming/*.xlsx
+uploads_incoming/*.xls
+!uploads_incoming/.gitkeep
+.venv/
+venv/
+*.egg-info/
+.DS_Store

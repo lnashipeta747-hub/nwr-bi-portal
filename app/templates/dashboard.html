@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · NWR BI Portal{% endblock %}
+{% block content %}
+<!--
+  Placeholder scenic photos (Lorem Picsum — free to use, no attribution
+  required). Swap these background-image URLs for real photography of
+  NWR's resorts (Etosha, Namushasha, Swakopmund, etc.) before the actual
+  demo/submission.
+-->
+<div class="hero-slider" id="heroSlider">
+  <div class="slide active" style="background-image:url('https://picsum.photos/seed/etosha-lodge/1600/500')"></div>
+  <div class="slide" style="background-image:url('https://picsum.photos/seed/namibia-safari/1600/500')"></div>
+  <div class="slide" style="background-image:url('https://picsum.photos/seed/river-lodge/1600/500')"></div>
+  <div class="hero-content">
+    <h1>Dashboard Home</h1>
+    <span class="muted">Last 30 days &middot; role-filtered for {{ current_user.role.name }}{% if current_user.resort_scope %} &middot; {{ current_user.resort_scope }}{% endif %}</span>
+  </div>
+  <div class="hero-dots" id="heroDots">
+    <span class="active" data-slide="0"></span>
+    <span data-slide="1"></span>
+    <span data-slide="2"></span>
+  </div>
+</div>
+
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">Occupancy</div>
+    <div class="kpi-value">{{ kpis.occupancy_pct }}%</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Revenue</div>
+    <div class="kpi-value">N${{ "{:,.0f}".format(kpis.revenue) }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Bookings</div>
+    <div class="kpi-value">{{ kpis.bookings }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">RevPAR</div>
+    <div class="kpi-value">N${{ kpis.revpar }}</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Revenue Trend</h2>
+  <canvas id="revenueTrendChart" height="90"></canvas>
+</div>
+
+{% if current_user.has_role('Admin', 'Manager') %}
+<div class="card">
+  <h2>Quick Actions</h2>
+  <div class="quick-actions-row">
+    <form method="POST" action="{{ url_for('api.trigger_cimso_sync') }}">
+      <button type="submit" class="btn">Sync CiMSO Now</button>
+    </form>
+    <a href="{{ url_for('upload.upload_file') }}" class="btn btn-outline">Upload CSV/Excel</a>
+  </div>
+</div>
+{% endif %}
+
+<script>
+  // Simple auto-advancing fade slider for the hero banner (no dependencies).
+  (function () {
+    const slides = document.querySelectorAll('#heroSlider .slide');
+    const dots = document.querySelectorAll('#heroDots span');
+    let current = 0;
+
+    function showSlide(i) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = i;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+    }
+
+    dots.forEach((dot, i) => dot.addEventListener('click', () => showSlide(i)));
+
+    setInterval(() => showSlide((current + 1) % slides.length), 5000);
+  })();
+</script>
+
+<script>
+  const ctx = document.getElementById('revenueTrendChart');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {{ chart_labels|tojson }},
+      datasets: [{
+        label: 'Revenue (N$)',
+        data: {{ chart_values|tojson }},
+        borderColor: '#c99a3f',
+        backgroundColor: 'rgba(201,154,63,0.15)',
+        tension: 0.3,
+        fill: true,
+        pointRadius: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+</script>
+{% endblock %}

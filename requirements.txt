@@ -1,0 +1,18 @@
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+Flask-Login==0.6.3
+Flask-WTF==1.2.1
+Werkzeug==3.0.3
+APScheduler==3.10.4
+pandas==2.2.2
+openpyxl==3.1.2
+python-dotenv==1.0.1
+
+# Uncomment for a real PostgreSQL deployment (Phase 2):
+# psycopg2-binary==2.9.9
+
+# Uncomment when Phase 2 wires up the real CiMSO REST endpoint:
+# requests==2.32.3
+
+# Recommended for production deployment instead of the Flask dev server:
+# gunicorn==22.0.0

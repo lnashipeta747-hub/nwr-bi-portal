@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Sync Log · NWR BI Portal{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>CiMSO Sync History</h1>
+  <form method="POST" action="{{ url_for('api.trigger_cimso_sync') }}">
+    <button type="submit" class="btn btn-gold">Sync Now</button>
+  </form>
+</div>
+
+<div class="card">
+  <table class="data-table">
+    <thead>
+      <tr><th>Run At</th><th>Fetched</th><th>Passed</th><th>Failed</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td>{{ log.run_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        <td>{{ log.rows_fetched }}</td>
+        <td class="badge-pass">{{ log.rows_passed }}</td>
+        <td class="badge-fail">{{ log.rows_failed }}</td>
+        <td>{{ log.status }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="muted">No sync runs yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

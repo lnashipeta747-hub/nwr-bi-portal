@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Reservations · NWR BI Portal{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Reservations</h1>
+  <a href="{{ url_for('dashboard.export_csv', view_name='reservations') }}" class="btn">Export CSV</a>
+</div>
+
+<div class="card">
+  <table class="data-table">
+    <thead>
+      <tr><th>Resort</th><th>Room Type</th><th>Check-in</th><th>Check-out</th><th>Nights</th><th>Guests</th><th>Revenue (N$)</th></tr>
+    </thead>
+    <tbody>
+      {% for b in bookings %}
+      <tr>
+        <td>{{ b.resort.resort_name }}</td>
+        <td>{{ b.room_type.room_type_name }}</td>
+        <td>{{ b.checkin_date }}</td>
+        <td>{{ b.checkout_date }}</td>
+        <td>{{ b.nights }}</td>
+        <td>{{ b.guest_count }}</td>
+        <td>{{ "{:,.2f}".format(b.revenue) }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="muted">No bookings yet — try "Sync CiMSO Now" from the dashboard.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

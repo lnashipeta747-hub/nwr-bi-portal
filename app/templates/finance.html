@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Finance · NWR BI Portal{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Finance — Revenue Drill-Down</h1>
+  <a href="{{ url_for('dashboard.export_csv', view_name='finance') }}" class="btn">Export CSV</a>
+</div>
+
+<div class="card">
+  <table class="data-table">
+    <thead>
+      <tr><th>Resort</th><th>Room Type</th><th>Bookings</th><th>Revenue (N$)</th></tr>
+    </thead>
+    <tbody>
+      {% for resort_name, room_type_name, bookings, revenue in rows %}
+      <tr>
+        <td>{{ resort_name }}</td>
+        <td>{{ room_type_name }}</td>
+        <td>{{ bookings }}</td>
+        <td>{{ "{:,.2f}".format(revenue) }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="muted">No revenue data yet — try "Sync CiMSO Now" from the dashboard, or upload a spreadsheet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

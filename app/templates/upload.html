@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Upload Data · NWR BI Portal{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Upload CSV / Excel</h1>
+</div>
+
+<div class="card">
+  <h2>New Upload</h2>
+  <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload.upload_file') }}">
+    <div class="form-field">
+      <label for="file">Spreadsheet (.csv, .xlsx, .xls)</label>
+      <input type="file" id="file" name="file" accept=".csv,.xlsx,.xls" required>
+    </div>
+    <button type="submit" class="btn btn-gold">Upload &amp; Validate</button>
+  </form>
+  <p class="muted" style="margin-top:0.8rem;">
+    Expected columns (any common variant is auto-detected): Resort, Room Type, Booking Date,
+    Check-in, Check-out, Nights, Revenue, Guests.
+  </p>
+</div>
+
+<div class="card">
+  <h2>Recent Uploads (Audit Log)</h2>
+  <table class="data-table">
+    <thead>
+      <tr><th>File</th><th>Uploaded By</th><th>When</th><th>Total</th><th>Passed</th><th>Failed</th></tr>
+    </thead>
+    <tbody>
+      {% for u in recent_uploads %}
+      <tr>
+        <td>{{ u.original_filename }}</td>
+        <td>{{ u.uploaded_by.username }}</td>
+        <td>{{ u.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>{{ u.rows_total }}</td>
+        <td class="badge-pass">{{ u.rows_passed }}</td>
+        <td class="badge-fail">{{ u.rows_failed }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="muted">No uploads yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Rows That Failed Validation</h2>
+  <table class="data-table">
+    <thead>
+      <tr><th>Source</th><th>Resort (raw)</th><th>Room Type (raw)</th><th>Reason</th></tr>
+    </thead>
+    <tbody>
+      {% for row in failed_rows %}
+      <tr>
+        <td>{{ row.source_reference }}</td>
+        <td>{{ row.resort_name_raw }}</td>
+        <td>{{ row.room_type_raw }}</td>
+        <td class="badge-fail">{{ row.validation_error }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="muted">No failed rows. 🎉</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

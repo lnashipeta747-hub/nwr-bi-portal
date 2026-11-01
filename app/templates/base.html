@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NWR BI Portal{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+{% if current_user.is_authenticated %}
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">NWR</span>
+    <span class="brand-name">Business Intelligence Portal</span>
+  </div>
+  <nav class="navlinks">
+    <a href="{{ url_for('dashboard.home') }}" class="{{ 'active' if request.endpoint == 'dashboard.home' }}">Home</a>
+    {% if current_user.has_role('Admin', 'Manager') %}
+      <a href="{{ url_for('dashboard.finance') }}" class="{{ 'active' if request.endpoint == 'dashboard.finance' }}">Finance</a>
+      <a href="{{ url_for('dashboard.reservations') }}" class="{{ 'active' if request.endpoint == 'dashboard.reservations' }}">Reservations</a>
+      <a href="{{ url_for('dashboard.operations') }}" class="{{ 'active' if request.endpoint == 'dashboard.operations' }}">Operations</a>
+      <a href="{{ url_for('upload.upload_file') }}" class="{{ 'active' if request.endpoint == 'upload.upload_file' }}">Upload Data</a>
+      <a href="{{ url_for('api.sync_history') }}" class="{{ 'active' if request.endpoint == 'api.sync_history' }}">Sync Log</a>
+    {% endif %}
+  </nav>
+  <div class="userbox">
+    <span class="role-badge role-{{ current_user.role.name|lower }}">{{ current_user.role.name }}</span>
+    <span class="username">{{ current_user.username }}</span>
+    <a href="{{ url_for('auth.logout') }}" class="logout-link">Log out</a>
+  </div>
+</header>
+{% endif %}
+
+<main class="page">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-stack">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  NWR BI Portal &middot; Phase 1 Hackathon Prototype &middot; Leonora Nashipeta, University of Namibia
+</footer>
+</body>
+</html>

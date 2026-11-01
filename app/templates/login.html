@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Log In · NWR BI Portal{% endblock %}
+{% block content %}
+<div class="auth-wrapper">
+  <h1>NWR Business Intelligence Portal</h1>
+  <p class="subtitle">Single source of truth for Management &amp; EXCO</p>
+
+  <form method="POST" action="{{ url_for('auth.login') }}">
+    <div class="form-field">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="e.g. admin@nwr" required autofocus>
+    </div>
+    <div class="form-field">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="••••••••" required>
+    </div>
+    <button type="submit" class="btn btn-gold" style="width:100%;">Log In</button>
+  </form>
+
+  <div class="demo-creds">
+    <strong>Demo credentials</strong> (seeded by seed_data.py):<br>
+    admin@nwr / admin123 — Admin<br>
+    manager@nwr / manager123 — Manager (Etosha Safari Lodge)<br>
+    exco@nwr / exco123 — EXCO
+  </div>
+</div>
+{% endblock %}
