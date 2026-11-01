@@ -1,4 +1,4 @@
-# NWR Business Intelligence Portal — Phase 1 Framework
+# NWR Business Intelligence Portal - Phase 1 Framework
 
 **Leonora Nashipeta · University of Namibia**
 NWR Hackathon · Presentation 16 July 2026, 10:15–10:30
@@ -119,30 +119,30 @@ python3 seed_data.py
 
 ## Security layers implemented (Slide 5)
 
-- **L1 Authentication** — Flask-Login sessions, Werkzeug password hashing
+- **L1 Authentication** - Flask-Login sessions, Werkzeug password hashing
   (pbkdf2:sha256 — a salted one-way hash, same category of protection as
   bcrypt), every login attempt (success or failure) logged with IP address
   in `login_attempts`.
-- **L2 Authorisation/RBAC** — `@role_required(...)` decorator on every
-  sensitive route, and — the important part — `_resort_filter()` in
+- **L2 Authorisation/RBAC** - `@role_required(...)` decorator on every
+  sensitive route, and - the important part — `_resort_filter()` in
   `app/dashboard/routes.py` filters the SQL query itself, so a Manager's
   query never fetches another resort's rows from the database at all.
 - **L3 Data in transit** — the app reads `SECRET_KEY`, database
   credentials, and the CiMSO API key from environment variables, never
   hard-coded, and `.env` is git-ignored. Deploy behind HTTPS/TLS in
   production and set `FORCE_SECURE_COOKIES=true`.
-- **L4 Data at rest** — in a real deployment, PostgreSQL should be bound
+- **L4 Data at rest** - in a real deployment, PostgreSQL should be bound
   to localhost/private network only (not exposed publicly), with
-  automated backups — this is an infrastructure/deployment step, not
+  automated backups - this is an infrastructure/deployment step, not
   something the application code can enforce by itself.
 
 ## Known Phase 1 limitations (be upfront about these if asked)
 
 - CiMSO integration is a realistic mock, not a live connection (no
   credentials yet).
-- PDF export isn't implemented yet — CSV export is (Slide 5 UX section
+- PDF export isn't implemented yet - CSV export is (Slide 5 UX section
   mentions CSV/PDF; CSV is the Phase 1 deliverable here).
-- No automated test suite yet — recommended next step for Phase 2 is
+- No automated test suite yet - recommended next step for Phase 2 is
   `pytest` coverage of `app/upload/validators.py`, since that's where a
   bug would most silently corrupt real numbers.
 - Dev server (`python3 run.py`) is for demo/dev use only; a real
